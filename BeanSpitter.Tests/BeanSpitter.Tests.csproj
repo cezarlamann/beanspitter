@@ -1,0 +1,124 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.2;net45</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Files\Xml\20190402-0800-gleif-goldencopy-lei2-intra-day.xml" />
+    <None Remove="Files\Xml\CustomersOrders.xml" />
+    <None Remove="Files\Xml\CustomersOrdersWithError.xml" />
+    <None Remove="Files\Xml\MT_DATTRA_BE_000045-1-000026_19.xml" />
+    <None Remove="Files\Xml\XX_DATTRA_ZZ_000002-0-000001_19.xml" />
+    <None Remove="Files\Xsd\2017-03-21_lei-cdf-v2-1.xsd" />
+    <None Remove="Files\Xsd\auth.016.001.01.xsd" />
+    <None Remove="Files\Xsd\auth.016.001.01_ESMAUG_DATTRA_1.1.0.xsd" />
+    <None Remove="Files\Xsd\auth.016.001.01_ESMAUG_Reporting_1.1.0.xsd" />
+    <None Remove="Files\Xsd\auth.031.001.01.xsd" />
+    <None Remove="Files\Xsd\auth.031.001.01_ESMAUG_FDBSTA_1.1.0.xsd" />
+    <None Remove="Files\Xsd\auth.031.001.01_ESMAUG_FDBTRA_1.1.0.xsd" />
+    <None Remove="Files\Xsd\auth.031.001.01_ESMAUG_Reporting_1.1.0.xsd" />
+    <None Remove="Files\Xsd\CustomersOrders.xsd" />
+    <None Remove="Files\Xsd\DRAFT15auth.016.001.01_ESMAUG_DATTRA_1.0.3.xsd" />
+    <None Remove="Files\Xsd\DRAFT15auth.016.001.01_ESMAUG_Reporting_1.0.3.xsd" />
+    <None Remove="Files\Xsd\DRAFT3auth.046.001.01.xsd" />
+    <None Remove="Files\Xsd\DRAFT4auth.031.001.01_ESMAUG_FDBSTA_1.0.1.xsd" />
+    <None Remove="Files\Xsd\DRAFT4auth.031.001.01_ESMAUG_FDBTRA_1.0.1.xsd" />
+    <None Remove="Files\Xsd\DRAFT5auth.031.001.01_ESMAUG_Reporting_1.0.2.xsd" />
+    <None Remove="Files\Xsd\head.001.001.01_ESMAUG_1.0.0.xsd" />
+    <None Remove="Files\Xsd\head.003.001.01.xsd" />
+    <None Remove="Files\Xsd\xml.xsd" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Files\Xml\20190402-0800-gleif-goldencopy-lei2-intra-day.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xml\CustomersOrdersWithError.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xml\CustomersOrders.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xml\XX_DATTRA_ZZ_000002-0-000001_19.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\2017-03-21_lei-cdf-v2-1.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\auth.016.001.01_ESMAUG_Reporting_1.1.0.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Files\Xsd\auth.016.001.01_ESMAUG_DATTRA_1.1.0.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\auth.031.001.01_ESMAUG_FDBSTA_1.1.0.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\auth.031.001.01_ESMAUG_FDBTRA_1.1.0.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\auth.031.001.01_ESMAUG_Reporting_1.1.0.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\CustomersOrders.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\DRAFT15auth.016.001.01_ESMAUG_DATTRA_1.0.3.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\DRAFT15auth.016.001.01_ESMAUG_Reporting_1.0.3.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\DRAFT3auth.046.001.01.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\DRAFT4auth.031.001.01_ESMAUG_FDBSTA_1.0.1.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\DRAFT4auth.031.001.01_ESMAUG_FDBTRA_1.0.1.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\DRAFT5auth.031.001.01_ESMAUG_Reporting_1.0.2.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\head.001.001.01_ESMAUG_1.0.0.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\head.003.001.01.xsd">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Files\Xsd\xml.xsd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="codecracker.CSharp" Version="1.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FakeItEasy" Version="5.1.0" />
+    <PackageReference Include="FakeItEasy.Analyzer.CSharp" Version="5.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="1.4.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="1.4.0" />
+    <PackageReference Include="System.IO.Abstractions" Version="4.0.11" />
+    <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="4.0.11" />
+    <PackageReference Include="System.IO.Compression" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BeanSpitter\BeanSpitter.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.2'">
+    <PackageReference Include="System.IO.Compression.ZipFile">
+      <Version>4.3.0</Version>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>

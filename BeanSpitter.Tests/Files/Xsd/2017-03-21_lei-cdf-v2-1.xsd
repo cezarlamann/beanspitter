@@ -1,0 +1,2017 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified"
+  targetNamespace="http://www.gleif.org/data/schema/leidata/2016"
+  xmlns:lei="http://www.gleif.org/data/schema/leidata/2016">
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace"
+    schemaLocation="http://www.w3.org/2001/xml.xsd"/>
+  <xs:annotation>
+    <xs:documentation>
+      <h1>LEI-CDF Version 2.1</h1> Documentation last updated: 2017-02-23 <h2>Introduction</h2> As
+      the Global LEI System (GLEIS) High Level Principles stipulate, the GLEIS should uniquely and
+      unambiguously identify participants to financial transactions. The ISO 17442 Legal Entity
+      Identifier (LEI) standard defines the following set of attributes as the most essential
+      elements of identification: <ul>
+        <li>The official name of the legal entity as recorded in the business registry, or with the
+          fund manager for collective investment vehicles, or otherwise in the entityâ€™s constituting
+          documents.</li>
+        <li>Where applicable, the name of the business registry in which the entity was formed.</li>
+        <li>The identifier of the entity in the business registry.</li>
+        <li>The address of the headquarters of the legal entity or the address of the fund
+          manager.</li>
+        <li>The address and the country of legal formation as represented in ISO 3166.</li>
+        <li>The date of the first LEI assignment.</li>
+        <li>The date of last update of the LEI set of information.</li>
+        <li>The date of expiry, where applicable.</li>
+        <li>The reason for expiry, if applicable.</li>
+        <li>For entities with a date of expiry, where applicable, the LEI of the entity or entities
+          that acquired the expired entity.</li>
+      </ul> The LEI Common Data File format (LEI-CDF) was proposed by the Legal Entity Identifier
+      Regulatory Oversight Committee (LEI ROC) as the additional standard necessary to support the
+      GLEIS in maintaining exclusive assignment of LEIs (one LEI per entity) and identifying,
+      remediating data quality issues, and supporting use of the data. It is maintained and
+      developed as a technical standard by the Global LEI Foundation (GLEIF) with the collaboration
+      and oversight of the LEI ROC. The LEI-CDF specifies in more detail: <ul>
+        <li>The semantic content (definitions) of the ISO 17442 attributes.</li>
+        <li>Some additional elements, such an indication of the status of the information, necessary
+          for effective use of the data.</li>
+        <li>The form the information takes at any given LOU, such that it can be made to conform to
+          a common standard.</li>
+      </ul> All LOUs use this file format to publish LEIs and their reference data.<h2>Audience for
+        this document</h2> The target audience for this standard includes: <ul>
+        <li>All Local Operating Units (as well as candidate LOUs) of the GLEIS.</li>
+        <li>All users or potential users of LEI data.</li>
+        <li>All financial regulators who consume LEI data.</li>
+      </ul>
+      <h2>Status of this document</h2> This section describes the status of this document at the
+      time of its publication. Later versions may supersede this document. The most up to date
+      version will always be available from www.gleif.org. <br/><br/>The file format references and
+      honors previous completed work published by the LEI ROC in a document entitled "LEI Data File
+      Format 1.0â€ (19 June 2014; available from www.leiroc.org).<br/>
+      <h2>Terminology and Typographical Conventions</h2> The following typographical conventions are
+      used throughout the document: <ul>
+        <li>ALL CAPS type is used for the special terms enumerated above.</li>
+        <li><code>Monospace type</code> is used to denote programming language, UML, and XML
+          identifiers, as well as for the text of XML documents.</li>
+      </ul>
+      <h2>Cardinalities</h2>
+      <ul>
+        <li>The cardinality of each element (the number of times it MUST or MAY appear in an XML
+          data file conforming to this schema) is expressed as a number range in the format {minimum
+          occurrences, maximum occurrences} in the XML examples shown below the notes of its
+          containing element. This notation is equivalent to the following explanations in
+          words:</li>
+        <ul>
+          <li>Mandatory, unique: <code>{1,1}</code> - the element MUST appear, exactly once.</li>
+          <li>Mandatory, repeatable: <code>{1,unbounded}</code> - the element MUST appear at least
+            once. It may be repeated any number of times.</li>
+          <li>Optional, unique: <code>{0,1}</code> - the element NEED NOT appear; it MAY appear once
+            at most.</li>
+          <li>Optional, repeatable: <code>{0,unbounded}</code> - the element NEED NOT appear. It MAY
+            be repeated any number of times.</li>
+        </ul>
+      </ul> Please note: <ul>
+        <li>The default cardinality is {1,1} (mandatory, unique). This document highlights when an
+          element differs from this either by its <code>minOccurs</code> (minimum occurrences) or
+            <code>maxOccurs</code> (maximum occurrences) value, or both. </li>
+        <li>XML cardinalities apply in the context of any containing elements. This means that a
+          contained element may have a cardinality of one or more even if its containing element may
+          be omitted, because the contained element is mandatory <strong>given</strong> the presence
+          of the container.</li>
+        <li>XML cardinalities enforce a minimum data quality and standards conformance. Other
+          business rules (as explained below) and data quality checks applied by GLEIF may encourage
+          stricter cardinalities in live implementations.</li>
+      </ul>
+      <h2>Business Rules</h2> The accompanying documentation in addition to this Technical
+      Specification specifies business rules where applicable for each element. These are rules that
+      are not enforced by validating against the XML schema, but are still mandatory for all Common
+      Data File (CDF) format files. <br/><br/>
+      <h2>XML Syntax</h2> This section specifies the XML schema for an LEI data file conforming to
+      this standard.<br/><br/>
+      <h3>XML Design Rules</h3>
+      <ul>
+        <li>The XSD schema conforms to W3C's XML Schema specification, version 1.0.</li>
+        <li>The XML namespace is "http://www.gleif.org/data/schema/leidata/2016".</li>
+        <li>All interior XML elements are namespace-qualified (element form = qualified).</li>
+        <li>All XML attributes are in the null namespace (attribute form = unqualified), with the
+          exception of <code>xml:lang</code>.</li>
+        <li>Element names are upper camel case.</li>
+        <li>Attribute name are lower camel case.</li>
+        <li>XSD type names are upper camel case.</li>
+        <li>Enumeration code list values are all caps with underscores.</li>
+        <li>Elements are used in preference to attributes except for language and type
+          qualifiers.</li>
+        <li>For a data element specified as having unbounded cardinality, the XML includes a single
+          container element whose subelements are one or more instances of the data element whose
+          cardinality is unbounded. The name of the container element is formed as the plural of the
+          name of the contained elements.</li>
+      </ul>
+      <h3>XML Schema</h3> An XML file conforming to this standard SHALL be valid according to the
+      following XSD 1.0 schema.<br/><br/>
+      <h2>Release Notes</h2>
+      <h3>Version 2.1</h3>
+      <ul>
+        <li>Cardinality changes:</li>
+        <ul>
+          <li><code>OtherValidationAuthority</code> was <code>{0,1}</code> and is now
+              <code>{1,1}</code>.</li>
+        </ul>
+      </ul>
+      <ul>
+        <li>Corrections / Bug fixes:</li>
+        <ul>
+          <li>Missing <code>Extension</code> added (back) to <code>LEIHeader</code>.</li>
+        </ul>
+        <li>New or changed elements:</li>
+        <ul>
+          <!-- 
+          <li>Renamed <code>LEIHeader</code> to <code>Header</code> to align with RR-CDF, RepEx
+            etc.</li>
+            -->
+          <li>Additional <code>Extension</code> added to <code>LEIRecords</code>.</li>
+        </ul>
+      </ul>
+      <ul>
+        <li>Documentation notes:</li>
+        <ul>
+          <li>Documentation notes:</li>
+          <li>Replaced "RAL" by "RAL" in documentation.</li>
+          <li>Replaced "Registration Authorities Code List" by "Registration Authorities List" in
+            documentation.</li>
+        </ul>
+      </ul>
+      <h3>Version 2.0</h3>
+      <ul>
+        <li>Cardinality changes:</li>
+        <ul>
+          <li><code>LEIHeader</code> was <code>{0,1}</code> and is now <code>{1,1}</code>.</li>
+          <li><code>ContentDate</code> was <code>{0,1}</code> and is now <code>{1,1}</code>.</li>
+          <li><code>FileContent</code> was <code>{0,1}</code> and is now <code>{1,1}</code>.</li>
+          <li><code>RecordCount</code> was <code>{0,1}</code> and is now <code>{1,1}</code>.</li>
+        </ul>
+        <li>New or changed elements:</li>
+        <ul>
+          <li>Added <code>OtherRegistrationAuthorityID</code> element to capture interim free-text
+            registration authority information in the process of transition to a RAL entry.</li>
+          <li>Added <code>OtherLegalForm</code> element to capture interim free-text legal form
+            information in the process of transition to an ELF standard code.</li>
+          <li>Added <code>TransliteratedOtherEntityNames</code> and
+              <code>TransliteratedOtherAddresses</code>. These contain the name and address types
+            dealing with transliteration, and their character content is now validated by the XML
+            schema.</li>
+          <li>Added <code>EntityCategory</code>.</li>
+          <li>Added <code>ValidationAuthority</code>.</li>
+          <li>Added <code>OtherValidationAuthorities</code>.</li>
+          <li><code>BusinessRegisterEntityID</code> replaced by
+            <code>RegistrationAuthority</code>.</li>
+          <li><code>Token500Type</code> replaced by <code>Tokenized500Type</code>, has minimum
+            length of one character and may not contain any of: the carriage return (#xD), line feed
+            (#xA) nor tab (#x9) characters, shall not begin or end with a space (#x20) character, or
+            a sequence of two or more adjacent space characters.</li>
+          <li>All elements in the <code>lei:</code> namespace with base datatype
+              <code>xs:dateTime</code> now strictly validate according to the
+              <code>LEIDateTimeProfile</code> datatype. This enforces the restrictions specified in
+            the LEI-CDF V1.0 documentation.</li>
+          <li>Added optional <code>AddressNumber</code>.</li>
+          <li>Added optional <code>AddressNumberWithinBuilding</code>.</li>
+          <li>Added optional <code>MailRouting</code> address field; an optional free text address
+            line to hold content from other address lines containing explicit routing information
+            (presence indicates that this address is a routing / "care of" address).</li>
+          <li>Replaced <code>Line1</code> by <code>FirstAddressLine</code> and <code>Line2</code>
+            etc. by <code>AdditionalAddressLine</code>. The order of the content of these elements
+            follows the order specified by the XML representation.</li>
+          <li>The value of <code>RecordCount</code> can now only be equal to or greater than
+            zero.</li>
+        </ul>
+        <li>New or changed attributes:</li>
+        <ul>
+          <li>Updated <code>xml:lang</code> to specify use of the latest RFC from IETF BCP 47
+            (previously RFC 4646; now RFC 5646 at last schema update).</li>
+        </ul>
+        <li>New or changed enumerated values:</li>
+        <ul>
+          <li>Following enumerations now validate strongly (only the specified values are allowed at
+            a schema validation level; one element with a non-standard value cause the whole LEI
+            data to fail validation):</li>
+          <ul>
+            <li><code>FileContentEnum</code>.</li>
+            <li><code>EntityStatusEnum</code>.</li>
+            <li><code>EntityExpirationReasonEnum</code>.</li>
+            <li><code>RegistrationStatusEnum</code>.</li>
+            <li><code>EntityNameTypeEnum</code>.</li>
+            <li><code>AddressTypeEnum</code>.</li>
+            <li><code>AssociatedEntityTypeEnum</code>.</li>
+            <li><code>ValidationSourcesEnum</code>.</li>
+          </ul>
+          <li>Following enumeration elements now validate by format (only values with the correct
+            pattern of characters are accepted; conversely, however, some schema-valid character
+            combinations may not be registered allowed values):</li>
+          <ul>
+            <li><code>RegistrationAuthority</code>.</li>
+            <li><code>LegalForm</code>.</li>
+          </ul>
+          <li><code>BusinessRegisterEnum</code> replaced by
+            <code>RegistrationAuthorityEnum</code>.</li>
+          <li><code>COU_DELTA_PUBLISHED</code> replaced by <code>GLEIF_DELTA_PUBLISHED</code>.</li>
+          <li><code>COU_FULL_PUBLISHED</code> replaced by <code>GLEIF_FULL_PUBLISHED</code>.</li>
+          <li><code>OTHER_LEGAL</code> replaced by
+            <code>ALTERNATIVE_LANGUAGE_LEGAL_NAME</code>.</li>
+          <li>Added <code>PREVIOUS_LEGAL_NAME</code>
+            <code>OtherEntityName</code> type.</li>
+          <li>Added <code>TRADING_OR_OPERATING_NAME</code>
+            <code>OtherEntityName</code> type.</li>
+          <li>Added <code>TransliteratedOtherEntityNames</code> types:
+              <code>PREFERRED_ASCII_TRANSLITERATED_LEGAL_NAME</code>,
+              <code>AUTO_ASCII_TRANSLITERATED_LEGAL_NAME</code>.</li>
+          <li>Added <code>TransliteratedOtherAddress</code>
+              types:<code>AUTO_ASCII_TRANSLITERATED_LEGAL_ADDRESS</code>,
+              <code>AUTO_ASCII_TRANSLITERATED_HEADQUARTERS_ADDRESS</code>,
+              <code>PREFERRED_ASCII_TRANSLITERATED_LEGAL_ADDRESS</code>,
+              <code>PREFERRED_ASCII_TRANSLITERATED_HEADQUARTERS_ADDRESS</code>.</li>
+        </ul>
+        <li>Documentation notes:</li>
+        <ul>
+          <li>Replaced "pre-LOU" by "LOU" in documentation.</li>
+          <li>Renamed all enumeration elements, updating suffix "Enum1.0" to "Enum", indicating that
+            these are the definitive enumerated values.</li>
+        </ul>
+      </ul>
+      <h3>Version 1.0</h3> The first release. Please find the published specification of LEI-CDF
+      V1.0 at https://www.gleif.org/content/2-about-lei/5-common-data-file-format/lou-20140620.pdf
+        <h2>Change Management</h2> Changes to this standard that affect the data schema SHALL be
+      made by approval and publication of a new version of this document. A new version SHALL be one
+      of the following:<br/><br/>
+      <hr3>Errata Version</hr3> An errata version makes corrections to the normative content of the
+      standard (excluding corrections which would change the data schema) and/or makes changes to
+      non-normative content such as explanatory material. An errata version does not change the XML
+      schema definitions, only the documentation parts, and so does not affect the interoperability
+      of systems implementing the standard. An errata version is indicated by incrementing the third
+      version number; e.g., 1.0 to 1.0.1, or 1.0.1 to 1.0.2.<br/><br/>
+      <h3>Minor Version</h3> A minor version may include all changes permitted in an errata version,
+      and in addition adds one or more data elements and/or adds one or more codes to a code list
+      (â€œenumâ€ data type). A minor version changes the XML schema. Minor version changes to schema
+      MUST provide for forward and backward compatibility. This allows existing implementations to
+      continue to interoperate even if they are using different minor versions. A minor version is
+      indicated by incrementing the second version number; e.g., 1.0 to 1.1 or 1.1.3 to 1.2.<br/><br/>
+      <h3>Major Version</h3> A major version may make any change at all, including incompatible
+      changes to the XML schema. Major version changes to schema require that the new version uses a
+      different XML namespace. This requires existing implementations to separately understand both
+      the old and new versions during a period of transition. A major version is indicated by
+      incrementing the first version number; e.g., 1.1 to 2.0.<br/><br/> The release of a new minor
+      or major version shall always be accompanied by a transition plan for LOUs and GLEIF, to
+      ensure a smooth and time-bounded migration to the new version.<br/><br/>
+      <h3>Minor Version Changes to the XML Schema</h3> A minor version may introduce new XML
+      elements and/or adds one or more codes to a code list (â€œenumâ€ data type). Minor version
+      changes to schema SHALL be made as specified below, in order to achieve forward and backward
+      compatibility.<br/><br/> Forward compatibility means that an LEI Data File which is valid
+      according to the older versionâ€™s schema is also valid according to the newer versionâ€™s
+      schema.<br/><br/> Backward compatibility means that an LEI Data File which is valid according
+      to the newer versionâ€™s schema is also valid according to the older versionâ€™s schema.<br/><br/>
+      New data elements may be added at pre-defined extension points within the schema, each with an
+      optional XML element NextVersion. New data elements are always added within a NextVersion
+      element. When a minor version adds a new data element to a <code>NextVersion</code> element, a
+      new <code>NextVersion</code> element is also added inside the previously added
+        <code>NextVersion</code> element, to accommodate additional data elements in subsequent
+      minor versions. Each successive NextVersion element set is contained directly within the
+      previous minor version's NextVersion set.<br/><br/> As can be seen from the full XML schema
+      presented here, the following rules SHALL be observed to ensure forward and backward
+      compatibility: <ul>
+        <li>The initial XSD declaration for a <code>NextVersion</code> element SHALL use the element
+          name "NextVersion", XML data type "lei:NextVersion1Type" and cardinality optional, unique
+          {0,1}. The XML data type allows a sequence of any elements, each of cardinality optional,
+          repeatable (unbounded) and with lax content processing, but in the target namespace.</li>
+        <li>The minOccurs declaration on the <code>NextVersion</code> element allows it to be
+          omitted in files conforming to the first minor version. The schema wildcard xsd:any allows
+          for forward compatibility: a file conforming to a new minor version still validates in the
+          old version because the wildcard matches any new elements introduced in the new minor
+          version.</li>
+        <li>New elements SHALL be introduced in a subsequent minor version by modifying the
+          declaration for the above type declaration as follows: <ul>
+            <li>A sequence of the new elements introduced in the previous version.</li>
+            <li>A subsequent <code>NextVersionN</code> element where <code>N</code> is an index
+              number starting at 1 and incremented by 1 with each minor version.</li>
+          </ul>
+          <li>Each new element SHALL be declared minOccurs=â€0â€, to ensure backward compatibility: a
+            file conforming to the old version still validates in the new version because the new
+            schema does not require the presence of elements not defined in the old version. If a
+            new element is mandatory for conformance to the new version, this MUST be enforced
+            outside schema validation.</li>
+          <li>The new definition of the <code>NextVersion</code> element SHALL include a declaration
+            of an inner <code>NextVersion</code> element, as illustrated above, to provide for
+            additional elements in subsequent minor versions. The nesting of
+              <code>NextVersion</code> elements is required to satisfy the â€œunique particle
+            attributionâ€ constraint of XSDÂ 1.0.</li>
+          <li>Each code list (Enum types) is implemented in the XML schema simply as the XSD string
+            data type. This provides for forward compatibility because the schema for an older minor
+            version will validate any string, including codes defined in newer minor versions. The
+            schema for each minor version includes the list of valid codes for that minor version as
+            a documentation annotation to the type declaration for each Enum type.</li>
+        </li>
+      </ul>
+      <h3>Major Version Changes to the XML Schema</h3> A major version may make any change to the
+      XML schema whatsoever, including incompatible changes.<br/><br/> A schema introduced in a new
+      major version SHALL use an XML namespace URI that is different from the XML namespace URI
+      defined in any other major version of this standard. The namespace URI for a new major version
+      SHOULD be the same as the namespace URI specified in this standard, with the year at the end
+      changed to the year in which the new major version is introduced. If more than one major
+      version is introduced in the same year, a letter â€œaâ€, â€œbâ€, â€œcâ€, etc., may be appended to the
+      year as needed.<br/><br/> A new major version MUST be accompanied by an implementation plan
+      which explains how implementations will make the transition from the old major version to the
+      new major version. Generally speaking, such a plan typically provides for a period of
+      transition in which an implementation capable of receiving the new major version is required
+      to also receive the old major version.<br/><br/>
+      <h2>Abstract Data Content</h2> This section specifies the abstract data content of a data file
+      conforming to this standard. A data file conforming to this standard SHALL consist of: <ul>
+        <li>An LEIHeader.</li>
+        <li>Zero or more LEI Data Records.</li>
+      </ul>
+      <h3>LEI File Header</h3> The LEI File Header describes the context for the LEI Data Records
+      contained in the main body of the file. The header exists to answer such questions as where
+      the data came from, when it was collected into this file, etc. The content of the header SHALL
+      NOT be required to interpret the data content of any LEI Data Record; each LEI Data Record is
+      self contained. <h3>LEI Data Record</h3> An LEI Data Record describes a single LEI
+      registration. Each LEI Data record in a file conforming to this standard SHALL include data
+      elements as described below: <h4>LEI</h4> The ISO 17442-compliant LEI of the legal entity
+      described by this LEI Data Record. The LEI is assigned by the LOU.<br/>A value of type
+        <code>LEIType</code> in a file conforming to this standard SHALL be a 20-character Legal
+      Entity Identifier conforming to ISO 17422. Conformance to ISO17442 includes having correct
+      check digits. <h4>Entity</h4> Attributes describing the legal entity itself. The
+        <code>Entity</code> data is supplied by the legal entity, and recorded and published by the
+      LOU. <h4>Registration</h4> Attributes describing the registration of this LEI with an LOU. The
+        <code>Registration</code> data is maintained by the LOU. <h4>Extension</h4> The optional
+        <code>Extension</code> section of an LEI record may be used to include additional data not
+      defined in this standard. This may include data specific to an LOU, data specific to a
+      publisher of LEI data, and so on.<br/> For example, an LOU may use <code>Extension</code> to
+      publish additional data elements it collects as part of registration.<br/> The following rules
+      MUST be observed: <ul>
+        <li>Each XML element included in the content of the <code>Extension element</code> SHALL be
+          in an XML namespace that is not null and not equal to the XML namespace of the LEI Data
+          File as specified in this standard.</li>
+        <li>The XML namespace for an <code>Extension</code> element SHALL be a namespace which the
+          creator of the extension element exclusively or jointly controls, or from which the
+          creator re-uses existing elements and their definitions, e.g. a namespace derived from the
+          Internet Domain Name of the creator, a namespace agreed upon by a group of trading
+          partners, etc.</li>
+        <li>An <code>Extension</code> element SHALL NOT be defined in such a way as to require the
+          recipient of the file to recognize the <code>Extension</code> element in order to
+          interpret the data elements specified in this standard. A recipient of the file MUST be
+          able to ignore all <code>Extension</code> elements and still interpret the standard
+          content correctly.</li>
+        <li>A recipient of a data file conforming to this standard SHALL NOT reject a file solely
+          because it contains extensions not understood by the recipient. A recipient MUST be
+          prepared to accept a file containing extensions and ignore any it does not understand,
+          provided that the file complies to this standard.</li>
+      </ul>
+    </xs:documentation>
+  </xs:annotation>
+  <xs:element name="LEIData" type="lei:LEIData">
+    <xs:annotation>
+      <xs:documentation>Contains the file structure for the whole LEI data records file as specified
+        in the XML datatypes below.</xs:documentation>
+
+    </xs:annotation>
+  </xs:element>
+  <xs:complexType name="LEIData">
+    <xs:sequence>
+      <xs:element name="LEIHeader" type="lei:LEIHeaderType">
+        <xs:annotation>
+          <xs:documentation>Contains the file upload information for this LEI data
+            file.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LEIRecords" type="lei:LEIRecordsType">
+        <xs:annotation>
+          <xs:documentation>Container for all of the <code>LEIRecord</code> elements submitted with
+            this file.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LEIHeaderType">
+    <xs:sequence>
+      <xs:element name="ContentDate" type="lei:LEIDateTimeProfile">
+        <xs:annotation>
+          <xs:documentation>The date and time as of which the data contained in the file is
+            valid.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Originator" type="lei:LEIType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The LEI of the entity that created the content of this
+            file.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="FileContent" type="lei:FileContentEnum">
+        <xs:annotation>
+          <xs:documentation>A code describing the content of this LEI data file.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="DeltaStart" type="lei:LEIDateTimeProfile" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The date and time of the baseline relative to which this file contains
+            new or changed LEI data records.</xs:documentation>
+          <xs:documentation> </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RecordCount" type="xs:nonNegativeInteger">
+
+        <xs:annotation>
+          <xs:documentation>The number of LEI data records in the file. Can be a positive whole
+            (integer) number, or zero (0).</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NextVersion" type="lei:HeaderNextVersionType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A structure for adding further elements in to the LEI data file header
+            in anticipation of a new version, by nesting a series of XML elements with this content
+            model within the <code>NextVersion</code> element, one for each new minor version of the
+            schema, postpending a serial number (1,2,3...) to the element name upon each
+            iteration.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Extension" type="lei:ExtensionType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>This lei:Extension element may contain any additional elements required
+            to extend the LEIHeader.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="HeaderNextVersionType">
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"
+        namespace="##targetNamespace"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LEIRecordsType">
+    <xs:sequence>
+      <xs:element name="LEIRecord" type="lei:LEIRecordType" minOccurs="0" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>Contains all LEI reference data including details of the LEI's
+            registration with the <code>ManagingLOU</code>.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="Extension" type="lei:ExtensionType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>This lei:Extension element may contain any additional elements required
+            to extend the LEIRecords container.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LEIRecordType">
+    <xs:sequence>
+      <xs:element name="LEI" type="lei:LEIType">
+        <xs:annotation>
+          <xs:documentation>The ISO 17442 compatible identifier for the legal entity described in
+            the <code>Entity</code> section.</xs:documentation>
+
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Entity" type="lei:EntityType">
+        <xs:annotation>
+          <xs:documentation>The Entity container element contains the legal entity's reference data,
+            enabling identification.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Registration" type="lei:RegistrationType">
+        <xs:annotation>
+          <xs:documentation>The <code>Registration</code> container element contains all information
+            on the legal entity's LEI registration with the
+            <code>ManagingLOU</code>.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NextVersion" type="lei:LEIRecordNextVersionType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A structure for adding further elements in to the LEI Data Record in
+            anticipation of a new version, by nesting a series of XML elements with this content
+            model within the <code>NextVersion</code> element, one for each new minor version of the
+            schema, postpending a serial number (1,2,3...) to the element name upon each
+            iteration.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Extension" type="lei:ExtensionType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>This lei:Extension element may contain any additional elements required
+            to extend the LEIRecord.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="LEIRecordNextVersionType">
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"
+        namespace="##targetNamespace"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EntityType">
+    <xs:sequence>
+      <xs:element name="LegalName" type="lei:NameType">
+        <xs:annotation>
+          <xs:documentation>The legal name of the entity. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OtherEntityNames" type="lei:OtherEntityNamesType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>An optional list of other names (excluding transliterations) for the
+            legal entity.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="TransliteratedOtherEntityNames"
+        type="lei:TransliteratedOtherEntityNamesType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>An optional list of ASCII-transliterated (i.e. Latin- or Romanized)
+            representations of names for the legal entity.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LegalAddress" type="lei:AddressType">
+        <xs:annotation>
+          <xs:documentation>The address of the entity as recorded in the registration of the entity
+            in its legal jurisdiction.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="HeadquartersAddress" type="lei:AddressType">
+        <xs:annotation>
+          <xs:documentation>The address of the headquarters of the Entity.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OtherAddresses" type="lei:OtherAddressesType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>An optional list of other addresses for the legal entity, excluding
+            transliterations.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="TransliteratedOtherAddresses" type="lei:TransliteratedOtherAddressesType"
+        minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>An optional list of transliterated addresses for the legal
+            entity.</xs:documentation>
+          <xs:documentation> </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="RegistrationAuthority" type="lei:RegistrationAuthorityType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>An identifier for the legal entity in a business registry in the
+            jurisdiction of legal registration, or in the appropriate registration
+            authority.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LegalJurisdiction" type="lei:JurisdictionCodeType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The jurisdiction of legal formation and registration of the entity (and
+            upon which the <code>LegalForm</code> data element is also dependent). Please note that
+            the XML schema validates the format of <code>LegalJurisdiction</code> codes but not the
+            specific codes conforming to the ISO standards it reequires.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EntityCategory" type="lei:EntityCategoryTypeEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Indicates (where applicable) the category of entity identified by this
+            LEI data record, as a more specific category within the broad definition given in ISO
+            17442. These categories are based on use cases specified in LEI-ROC policies, found at
+            http://www.leiroc.org/list/leiroc_gls/index.htm</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LegalForm" type="lei:LegalFormType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The legal form of the entity, taken from the ISO Entity Legal Form (ELF)
+            code list maintained by GLEIF. Please note that the XML schema validates the format of
+              <code>LegalForm</code> codes but not the specific codes conforming to the ISO standard
+            it reequires.<br/>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AssociatedEntity" type="lei:AssociatedEntityType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Another entity associated with this entity if needed to fully identify
+            this entity or to place it in an appropriate context. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EntityStatus" type="lei:EntityStatusEnum">
+        <xs:annotation>
+          <xs:documentation>The operational and/or legal registration status of the entity (may be
+              <code>ACTIVE</code> or <code>INACTIVE</code>). </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EntityExpirationDate" type="lei:LEIDateTimeProfile" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The date that the legal entity ceased to operate, whether due to
+            dissolution, merger or acquisition.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="EntityExpirationReason" type="lei:EntityExpirationReasonEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The reason that a legal entity ceased to exist and/or
+            operate.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SuccessorEntity" type="lei:SuccessorEntityType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The surviving/new legal entity which continues/replaces this
+            registration.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NextVersion" type="lei:EntityNextVersionType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A structure for adding further elements in to the <code>Entity</code>
+            section of the LEI data record in anticipation of a new version, by nesting a series of
+            XML elements with this content model within the <code>NextVersion</code> element, one
+            for each new minor version of the schema, postpending a serial number (1,2,3...) to the
+            element name upon each iteration.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="EntityNextVersionType">
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"
+        namespace="##targetNamespace"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RegistrationType">
+    <xs:sequence>
+      <xs:element name="InitialRegistrationDate" type="lei:LEIDateTimeProfile">
+        <xs:annotation>
+          <xs:documentation>Date/time the LEI record was created. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="LastUpdateDate" type="lei:LEIDateTimeProfile">
+        <xs:annotation>
+          <xs:documentation>Date/time the LEI record was most recently updated.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="RegistrationStatus" type="lei:RegistrationStatusEnum">
+        <xs:annotation>
+          <xs:documentation>The status of the legal entity's LEI registration with the
+              <code>ManagingLOU</code>.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NextRenewalDate" type="lei:LEIDateTimeProfile">
+        <xs:annotation>
+          <xs:documentation>The next date by which the LEI registration should be renewed and
+            re-certified by the legal entity.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ManagingLOU" type="lei:LEIType">
+        <xs:annotation>
+          <xs:documentation>The LEI of the LOU that is responsible for administering this LEI
+            registration.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ValidationSources" type="lei:ValidationSourcesEnum" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The level of validation of the reference data provided by the
+            registrant.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="ValidationAuthority" type="lei:ValidationAuthorityType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The (primary) registration authority used by the LOU to validate the
+            entity data.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="OtherValidationAuthorities" type="lei:OtherValidationAuthoritiesType"
+        minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>An optional list of additional registration authorities used by the LEI
+            Issuer to validate the entity data.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="NextVersion" type="lei:RegistrationNextVersionType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A structure for adding further elements in to the
+              <code>Registration</code> section of the LEI Data Record in anticipation of a new
+            version, by nesting a series of XML elements with this content model within the
+              <code>NextVersion</code> element, one for each new minor version of the schema,
+            postpending a serial number (1,2,3...) to the element name upon each
+            iteration.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="RegistrationNextVersionType">
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax"
+        namespace="##targetNamespace"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ExtensionType">
+    <xs:sequence>
+      <xs:any minOccurs="0" maxOccurs="unbounded" processContents="lax" namespace="##other"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="AddressType">
+    <xs:sequence>
+      <xs:element name="FirstAddressLine" type="lei:Tokenized500Type">
+        <xs:annotation>
+          <xs:documentation>The mandatory first address line element. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <!-- Optional, additional structured parts of Address Lines-->
+      <xs:element name="AddressNumber" type="lei:Tokenized500Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Optional, additional structured version of an external house number, or
+            range of numbers, contained in one of the address line elements. This could be a
+            numeral, a letter or code made up of mixed characters (e.g. 221B).<br/>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AddressNumberWithinBuilding" type="lei:Tokenized500Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Optional, additional structured version of an internal location number,
+            or range of numbers, contained in one of the address line elements.This could be a
+            numeral, a letter or code made up of mixed characters (e.g. 13) of a floor, suite or
+            apartment within a building identified e.g. by an <code>AddressNumber</code>
+            element.<br/>
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MailRouting" type="lei:Tokenized500Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Optional free text address line to hold content from other address lines
+            containing explicit routing information (this element's presence indicates that this
+            address is a routing / "care of" address. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AdditionalAddressLine" type="lei:Tokenized500Type" minOccurs="0"
+        maxOccurs="3">
+        <xs:annotation>
+          <xs:documentation>One to three optional additional address line
+            elements.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+
+
+      <xs:element name="City" type="lei:Tokenized500Type">
+        <xs:annotation>
+          <xs:documentation>The mandatory name of the city. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Region" type="lei:RegionCodeType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The (optional) 4- to 6-character ISO 3166-2 region code of the
+            region.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Country" type="lei:CountryCodeType">
+        <xs:annotation>
+          <xs:documentation>The 2-character ISO 3166-1 country code of the
+            country.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PostalCode" type="lei:Tokenized500Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The (optional) postal code of this address as specified by the local
+            postal service.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute ref="xml:lang" use="optional">
+      <xs:annotation>
+        <xs:documentation>The language in which all of the string- valued components of this address
+          are expressed.An IETF Language Code conforming to the latest RFC from IETF BCP 47. Note
+          that the first characters of an IETF Language Code, up to the hyphen (if any), are all
+          lowercase, and those following the hyphen (if any) are all uppercase.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="TransliteratedAddressType">
+    <xs:sequence>
+      <xs:element name="FirstAddressLine" type="lei:TransliteratedStringType">
+        <xs:annotation>
+          <xs:documentation>The mandatory first address line element. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <!-- Optional, additional structured parts of Address Lines-->
+      <xs:element name="AddressNumber" type="lei:TransliteratedStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Optional, additional structured version of an external house number, or
+            range of numbers, contained in one of the address line elements.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AddressNumberWithinBuilding" type="lei:TransliteratedStringType"
+        minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Optional, additional structured version of an internal location number,
+            or range of numbers, contained in one of the address line elements.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="MailRouting" type="lei:TransliteratedStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>Optional free text address line to hold content from other address lines
+            containing explicit routing information (this element's presence indicates that this
+            address is a routing / "care of" address. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AdditionalAddressLine" type="lei:TransliteratedStringType" minOccurs="0"
+        maxOccurs="3">
+        <xs:annotation>
+          <xs:documentation>Optional additional address line elements.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+
+
+      <xs:element name="City" type="lei:TransliteratedStringType">
+        <xs:annotation>
+          <xs:documentation>The mandatory name of the city. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Region" type="lei:RegionCodeType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The (optional) 4- to 6-character ISO 3166-2 region code of the
+            region.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="Country" type="lei:CountryCodeType">
+        <xs:annotation>
+          <xs:documentation>The 2-character ISO 3166-1 country code of the
+            country.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="PostalCode" type="lei:TransliteratedStringType" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The (optional) postal code of this address as specified by the local
+            postal service.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+    <xs:attribute ref="xml:lang" use="optional">
+      <xs:annotation>
+        <xs:documentation>The language in which all of the string- valued components of this address
+          are expressed.An IETF Language Code conforming to the latest RFC from IETF BCP 47. Note
+          that the first characters of an IETF Language Code, up to the hyphen (if any), are all
+          lowercase, and those following the hyphen (if any) are all uppercase.</xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="AssociatedEntityType">
+    <xs:choice>
+      <xs:element name="AssociatedLEI" type="lei:LEIType">
+        <xs:annotation>
+          <xs:documentation>The LEI of an entity associated with the LEI of this
+            registration.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="AssociatedEntityName" type="lei:NameType">
+        <xs:annotation>
+          <xs:documentation>The name of an entity associated with the LEI of this
+            registration.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
+    <xs:attribute name="type" type="lei:AssociatedEntityTypeEnum" use="required">
+      <xs:annotation>
+        <xs:documentation>The type of association represented by this AssociatedEntity instance. </xs:documentation>
+
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+  <xs:complexType name="RegistrationAuthorityType">
+    <xs:sequence>
+      <xs:element name="RegistrationAuthorityID" type="lei:RegistrationAuthorityEnum">
+        <xs:annotation>
+          <xs:documentation>The reference code of the registration authority, taken from the
+            Registration Authorities Code List maintained by GLEIF. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="OtherRegistrationAuthorityID" type="lei:Tokenized500Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A legacy / historical reference code of a registration authority which
+            is not yet entered in the Registration Authorities Code List (RAL) maintained by GLEIF,
+            or the designation of an interim register until such time as an entry from RAL can be
+            delivered. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="RegistrationAuthorityEntityID" type="lei:Tokenized500Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The identifier of the entity at the indicated registration authority.
+            Typically, the identifier of the legal entity as maintained by a business registry in
+            the jurisdiction of legal registration, or if the entity is one that is not recorded in
+            a business registry (e.g. one of the varieties of funds registered instead with
+            financial regulators), the identifier of the entity in the appropriate registration
+            authority.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="OtherValidationAuthoritiesType">
+    <xs:sequence>
+      <xs:element name="OtherValidationAuthority" type="lei:ValidationAuthorityType" minOccurs="1"
+        maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>An additional registration authority used by the LOU to validate the
+            entity data.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="ValidationAuthorityType">
+    <xs:sequence>
+      <xs:element name="ValidationAuthorityID" type="lei:RegistrationAuthorityEnum">
+        <xs:annotation>
+          <xs:documentation>The reference code of the registration authority, taken from the
+            Registration Authorities Code List (RAL) maintained by GLEIF. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="OtherValidationAuthorityID" type="lei:Tokenized500Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A legacy / historical reference code of a registration authority which
+            is not yet entered in the Registration Authorities Code List (RAL) maintained by GLEIF,
+            or the designation of an interim register until such time as an entry from RAL can be
+            delivered. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="ValidationAuthorityEntityID" type="lei:Tokenized500Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>The identifier of the entity at the indicated registration authority.
+            Typically, the identifier of the legal entity as maintained by a business registry in
+            the jurisdiction of legal registration, or if the entity is one that is not recorded in
+            a business registry (e.g. one of the varieties of funds registered instead with
+            financial regulators), the identifier of the entity in the appropriate registration
+            authority.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:simpleType name="JurisdictionCodeType">
+    <xs:union memberTypes="lei:CountryCodeType lei:RegionCodeType"/>
+  </xs:simpleType>
+  <xs:complexType name="OtherAddressType">
+    <xs:complexContent>
+      <xs:extension base="lei:AddressType">
+        <xs:attribute name="type" type="lei:AddressTypeEnum" use="required">
+          <xs:annotation>
+            <xs:documentation>The type of address represented by this <code>OtherAddress</code>
+              instance.</xs:documentation>
+
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:complexType name="OtherAddressesType">
+    <xs:sequence>
+      <xs:element name="OtherAddress" type="lei:OtherAddressType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>An alternative address for the legal entity excluding transliterations.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TransliteratedOtherAddressesType">
+    <xs:sequence>
+      <xs:element name="TransliteratedOtherAddress" type="lei:TransliteratedOtherAddressType"
+        maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>A transliterated version of one of the addresses for the legal entity.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TransliteratedOtherAddressType">
+    <xs:complexContent>
+      <xs:extension base="lei:TransliteratedAddressType">
+        <xs:attribute name="type" type="lei:TransliteratedAddressTypeEnum" use="required">
+          <xs:annotation>
+            <xs:documentation>Type of alternative name for the legal entity.</xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="OtherEntityNamesType">
+    <xs:sequence>
+      <xs:element name="OtherEntityName" type="lei:OtherEntityNameType" maxOccurs="unbounded">
+        <xs:annotation>
+          <xs:documentation>An alternative name or representation of a name for the legal entity,
+            excluding transliterations.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TransliteratedOtherEntityNamesType">
+    <xs:sequence>
+      <xs:element name="TransliteratedOtherEntityName" type="lei:TransliteratedOtherEntityNameType"
+        maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="OtherEntityNameType">
+    <xs:complexContent>
+      <xs:extension base="lei:NameType">
+        <xs:attribute name="type" type="lei:EntityNameTypeEnum" use="required">
+          <xs:annotation>
+            <xs:documentation>Type of alternative name for the legal entity.</xs:documentation>
+
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:complexType name="SuccessorEntityType">
+    <xs:choice>
+      <xs:element name="SuccessorLEI" type="lei:LEIType">
+        <xs:annotation>
+          <xs:documentation>The LEI of the successor entity. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+      <xs:element name="SuccessorEntityName" type="lei:NameType">
+        <xs:annotation>
+          <xs:documentation>The name of the successor entity. </xs:documentation>
+        </xs:annotation>
+      </xs:element>
+    </xs:choice>
+  </xs:complexType>
+  <xs:simpleType name="CountryCodeType">
+    <xs:annotation>
+      <xs:documentation>A 2-character country code conforming to ISO 3166-1 alpha-2. Please note
+        that the XML schema validates for all <code>CountryCode</code> values consisting of 2
+        upper-case Latin letters; some possible combinations may not be valid ISO 3166 entries. A
+        current code from the ISO-approved list must be used used. See
+        http://www.iso.org/iso/home/standards/country_codes.htm for more details.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="2"/>
+      <xs:maxLength value="2"/>
+      <xs:pattern value="([A-Z]{2})"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="RegionCodeType">
+    <xs:annotation>
+      <xs:documentation>A 4- to 6-character ISO 3166-2 region code of the region. Please note that
+        the XML schema validates for all <code>CountryCode</code> values consisting of 2 upper-case
+        Latin letters; some possible combinations may not be valid ISO 3166 entries.
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:minLength value="4"/>
+      <xs:maxLength value="6"/>
+      <xs:pattern value="([A-Z]{2}-[A-Z0-9]{1,3})"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="LEIType">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="20"/>
+      <xs:maxLength value="20"/>
+      <xs:pattern value="([0-9A-Z]{18}[0-9]{2})"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="Tokenized500Type">
+    <xs:annotation>
+      <xs:documentation>An element of this type has minimum length of one character and may not
+        contain any of: the carriage return (#xD), line feed (#xA) nor tab (#x9) characters, shall
+        not begin or end with a space (#x20) character, or a sequence of two or more adjacent space
+        characters.</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:maxLength value="500"/>
+      <xs:minLength value="1"/>
+      <xs:pattern value="\S+( \S+)*"/>
+
+    </xs:restriction>
+  </xs:simpleType>
+  <!--
+    WARNING:
+     All enumeration types now accept only the specified values as valid at the schema level.
+
+     To propose a change or addition to any enumeration in the LEI-CDF please contact leidata@gleif.org and your request will be considered subject to change management.
+  -->
+  <xs:simpleType name="FileContentEnum">
+    <xs:restriction base="xs:string">
+      <!-- Enumeration values for LEI-CDF 2.0: -->
+      <xs:enumeration value="LOU_FULL_PUBLISHED">
+        <xs:annotation>
+          <xs:documentation>The file contains all LEI Data Records published by an LOU (all LEI Data
+            Records for which the LOU is the <code>ManagingLOU</code>) as of the date/time the file
+            is created. </xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="LOU_DELTA_PUBLISHED">
+        <xs:annotation>
+          <xs:documentation>The file contains those LEI Data Records published by an LOU (all LEI
+            Data Records for which the LOU is the <code>ManagingLOU</code>) which are new or changed
+            since the <code>DeltaStart</code> date specified in the header, as of the date/time the
+            file is created.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="GLEIF_FULL_PUBLISHED">
+        <xs:annotation>
+          <xs:documentation>The file contains all LEI Data Records published by GLEIF (including all
+            LEI Data Records from all LOUs) as of the date/time the file is created.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="GLEIF_DELTA_PUBLISHED">
+        <xs:annotation>
+          <xs:documentation>The file contains those LEI Data Records published by GLEIF (including
+            all LEI Data Records from all LOUs) which are new or changed since the
+              <code>DeltaStart</code> specified in the header, as of the date/time the file is
+            created.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="QUERY_RESPONSE">
+        <xs:annotation>
+          <xs:documentation>The file contains records matching criteria specified in a query.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="RegistrationAuthorityEnum">
+    <xs:restriction base="xs:string">
+      <xs:annotation>
+        <xs:documentation>Please note that the XML schema validates for all
+            <code>RegistrationAuthority</code> values consisting of the upper-case Latin letters
+          "RA" followed by 6 digits; some possible combinations may not be valid Registration
+          Authority Code List (RAL) entries. A current code from the GLEIF-maintained list MUST be
+          used used. Values of the <code>RegistrationAuthorityEnum</code> code list are maintained
+          by GLEIF through the Registration Authorities Code List (RAL), available at
+          www.gleif.org.</xs:documentation>
+      </xs:annotation>
+      <xs:pattern value="RA\d{6}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="EntityCategoryTypeEnum">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="BRANCH">
+        <xs:annotation>
+          <xs:documentation>The legal entity is a branch of another legal entity.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FUND">
+        <xs:annotation>
+          <xs:documentation>The legal entity is a fund managed by another legal
+            entity.</xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="SOLE_PROPRIETOR">
+        <xs:annotation>
+          <xs:documentation>The legal entity is an individual acting in a business
+            capacity.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="LegalFormType">
+    <xs:sequence>
+
+      <xs:element name="EntityLegalFormCode" type="lei:LegalFormEnum">
+        <xs:annotation>
+          <xs:documentation>A current code from the GLEIF-maintained list MUST be used. Values of
+            the LegalFormEnum code list are maintained by ISO / GLEIF through the Entity Legal Form
+            (ELF), available from http://www.gleif.org.</xs:documentation>
+        </xs:annotation>
+      </xs:element>
+
+      <xs:element name="OtherLegalForm" type="lei:Tokenized500Type" minOccurs="0">
+        <xs:annotation>
+          <xs:documentation>A legacy code or textual description for the legal entity's legal form,
+            used until a current code from the GLEIF-maintained list can be used.</xs:documentation>
+
+        </xs:annotation>
+      </xs:element>
+
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="LegalFormEnum">
+    <xs:annotation>
+      <xs:documentation>Please note that the XML schema validates for all <code>LegalForm</code>
+        values conforming to the ISO 20275 standard (section "Code Structure"); four uppercase
+        alphanumeric characters in any combination except for purely numeric codes. Some possible
+        combinations may not be valid Entity Legal Form (ELF) entries. </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string">
+      <xs:pattern
+        value="([A-Z][A-Z0-9]{3}|[A-Z0-9][A-Z][A-Z0-9]{2}|[A-Z0-9]{2}[A-Z][A-Z0-9]|[A-Z0-9]{3}[A-Z])"/>
+      <xs:pattern value="9999"/>
+      <xs:pattern value="8888"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="EntityNameTypeEnum">
+    <xs:restriction base="xs:string">
+      <!-- Enumeration values for LEI-CDF 2.0: -->
+      <xs:enumeration value="ALTERNATIVE_LANGUAGE_LEGAL_NAME">
+        <xs:annotation>
+          <xs:documentation>Registered name of the entity in an alternative language in the legal
+            jurisdiction in which the entity is registered.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PREVIOUS_LEGAL_NAME">
+        <xs:annotation>
+          <xs:documentation>A primary legal name previously used by this entity.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TRADING_OR_OPERATING_NAME">
+        <xs:annotation>
+          <xs:documentation>A "trading as", "brand name" or "operating under" name currently used by
+            this entity in addition to, but not replacing, the (primary) legal, official registered
+            name.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="AddressTypeEnum">
+    <xs:restriction base="xs:string">
+      <!-- Enumeration values for LEI-CDF 2.0: -->
+      <xs:enumeration value="ALTERNATIVE_LANGUAGE_LEGAL_ADDRESS">
+        <xs:annotation>
+          <xs:documentation>Registered address of the entity in the legal jurisdiction, in an
+            alternative language used in the legal jurisdiction.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="ALTERNATIVE_LANGUAGE_HEADQUARTERS_ADDRESS">
+        <xs:annotation>
+          <xs:documentation>Address of the headquarters of the entity, in an alternative language
+            used in the legal jurisdiction.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="TransliteratedAddressTypeEnum">
+    <xs:restriction base="xs:string">
+      <!-- Enumeration values for LEI-CDF 2.0: -->
+
+      <xs:enumeration value="AUTO_ASCII_TRANSLITERATED_LEGAL_ADDRESS">
+        <xs:annotation>
+          <xs:documentation>Registered address of the entity in the legal jurisdiction,
+            transliterated to ASCII characters, auto-transliterated by the managing
+            LOU.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="AUTO_ASCII_TRANSLITERATED_HEADQUARTERS_ADDRESS">
+        <xs:annotation>
+          <xs:documentation>Address of the headquarters of the entity, transliterated to ASCII
+            characters, auto-transliterated by the managing LOU.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="PREFERRED_ASCII_TRANSLITERATED_LEGAL_ADDRESS">
+        <xs:annotation>
+          <xs:documentation>Registered address of the entity in the legal jurisdiction,
+            transliterated to ASCII characters, provided by the entity for this
+            purpose.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+
+      <xs:enumeration value="PREFERRED_ASCII_TRANSLITERATED_HEADQUARTERS_ADDRESS">
+        <xs:annotation>
+          <xs:documentation>Address of the headquarters of the entity, transliterated to ASCII
+            characters, provided by the entity for this purpose.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+
+    </xs:restriction>
+  </xs:simpleType>
+
+
+
+  <xs:simpleType name="AssociatedEntityTypeEnum">
+    <xs:restriction base="xs:string">
+      <!-- Enumeration values for LEI-CDF 2.0: -->
+      <xs:enumeration value="FUND_FAMILY">
+        <xs:annotation>
+          <xs:documentation>The legal entity is a fund, and the associated entity is the manager of
+            the fund. </xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="EntityStatusEnum">
+    <xs:restriction base="xs:string">
+      <!-- Enumeration values for LEI-CDF 2.0: -->
+      <xs:enumeration value="ACTIVE">
+        <xs:annotation>
+          <xs:documentation>As of the last report or update, the legal entity reported that it was
+            legally registered and operating. </xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="INACTIVE">
+        <xs:annotation>
+          <xs:documentation>It has been determined that the entity that was assigned the LEI is no
+            longer legally registered and/or operating, whether as a result of business closure,
+            acquisition by or merger with another (or new) entity, or determination of illegitimacy. </xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="EntityExpirationReasonEnum">
+    <xs:restriction base="xs:string">
+      <!-- Enumeration values for LEI-CDF 2.0: -->
+      <xs:enumeration value="DISSOLVED">
+        <xs:annotation>
+          <xs:documentation>The entity ceased to operate. </xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CORPORATE_ACTION">
+        <xs:annotation>
+          <xs:documentation>The entity was acquired or merged with another entity.
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="OTHER">
+        <xs:annotation>
+          <xs:documentation>The reason for expiry is neither of <code>DISSOLVED</code> nor
+              <code>CORPORATE_ACTION</code>
+          </xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="RegistrationStatusEnum">
+    <xs:restriction base="xs:string">
+      <!-- Enumeration values for LEI-CDF 2.0: -->
+      <xs:enumeration value="PENDING_VALIDATION">
+        <xs:annotation>
+          <xs:documentation>An application for an LEI that has been submitted and which is being
+            processed and validated.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ISSUED">
+        <xs:annotation>
+          <xs:documentation>An LEI Registration that has been validated and issued, and which
+            identifies an entity that was an operating legal entity as of the last update. </xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="DUPLICATE">
+        <xs:annotation>
+          <xs:documentation>An LEI Registration that has been determined to be a duplicate
+            registration of the same legal entity as another LEI Registration; the DUPLICATE status
+            is assigned to the non-surviving registration (i.e. the LEI that should no longer be
+            used).</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="LAPSED">
+        <xs:annotation>
+          <xs:documentation>An LEI registration that has not been renewed by the
+              <code>NextRenewalDate</code> and is not known by public sources to have ceased
+            operation.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="MERGED">
+        <xs:annotation>
+          <xs:documentation>An LEI registration for an entity that has been merged into another
+            legal entity, such that this legal entity no longer exists as an operating
+            entity.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="RETIRED">
+        <xs:annotation>
+          <xs:documentation>An LEI registration for an entity that has ceased operation, without
+            having been merged into another entity.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ANNULLED">
+        <xs:annotation>
+          <xs:documentation>An LEI registration that was marked as erroneous or invalid after it was
+            issued</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="CANCELLED">
+        <xs:annotation>
+          <xs:documentation>An LEI registration that was abandoned prior to issuance of an LEI
+          </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="TRANSFERRED">
+        <xs:annotation>
+          <xs:documentation>An LEI registration that has been transferred to a different LOU as the
+            managing LOU.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PENDING_TRANSFER">
+        <xs:annotation>
+          <xs:documentation>An LEI registration that has been requested to be transferred to another
+            LOU. The request is being processed at the sending LOU</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PENDING_ARCHIVAL">
+        <xs:annotation>
+          <xs:documentation>An LEI registration is about to be transferred to a different LOU, after
+            which its registration status will revert to a non-pending status. </xs:documentation>
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="ValidationSourcesEnum">
+    <xs:restriction base="xs:string">
+      <!-- Enumeration values for LEI-CDF 2.0: -->
+      <xs:enumeration value="PENDING">
+        <xs:annotation>
+          <xs:documentation>The validation of the reference data provided by the registrant has not
+            yet occurred.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="ENTITY_SUPPLIED_ONLY">
+        <xs:annotation>
+          <xs:documentation>Based on the validation procedures in use by the LOU responsible for the
+            record, the information associated with this record has significant reliance on the
+            information that a submitter provided due to the unavailability of corroborating
+            information. </xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="PARTIALLY_CORROBORATED">
+        <xs:annotation>
+          <xs:documentation>Based on the validation procedures in use by the LOU responsible for the
+            record, the information supplied by the registrant can be partially corroborated by
+            public authoritative sources, while some of the record is dependent upon the information
+            that the registrant submitted, either due to conflicts with authoritative information,
+            or due to data unavailability. </xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="FULLY_CORROBORATED">
+        <xs:annotation>
+          <xs:documentation>Based on the validation procedures in use by the LOU responsible for the
+            record, there is sufficient information contained in authoritative public sources to
+            corroborate the information that the submitter has provided for the
+            record.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="NameType">
+    <xs:simpleContent>
+      <xs:extension base="lei:Tokenized500Type">
+        <xs:attribute ref="xml:lang" use="optional">
+          <xs:annotation>
+            <xs:documentation>The language of this element's text content. An IETF Language Code
+              conforming to the latest RFC from IETF BCP 47. Note that the first characters of an
+              IETF Language Code, up to the hyphen (if any), are all lowercase, and those following
+              the hyphen (if any) are all uppercase.<br/>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="TransliteratedStringType">
+    <xs:annotation>
+      <xs:documentation><style type="text/css"> .tg {border-collapse:collapse;border-spacing:0;} .tg
+          td{font-family:Arial, sans-serif;font-size:14px;padding:10px
+          5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;} .tg
+          th{font-family:Arial, sans-serif;font-size:14px;font-weight:normal;padding:10px
+          5px;border-style:solid;border-width:1px;overflow:hidden;word-break:normal;} .tg
+          .tg-9hbo{font-weight:bold;vertical-align:top} .tg .tg-yw4l{vertical-align:top} </style>
+        <h1>Character Codes Allowed in ASCII Transliterated Names</h1> A
+          <code>TransliteratedOtherEntityName</code> instance of type
+          <code>PREFERRED_ASCII_TRANSLITERATED_LEGAL_NAME</code> or
+          <code>AUTO_ASCII_TRANSLITERATED_LEGAL_NAME</code>, can only contain non-control characters
+        drawn from the â€œinvariant subsetâ€ of ISO 646. These characters are enumerated below. The
+        â€œHex Valueâ€ column indicates the code point value (expressed in hexadecimal) for each
+        character in both ISOÂ 646 and ISOÂ 10646. <strong>This is enforced by the XML
+          schema.</strong><br/><br/>
+        <table class="tg">
+          <tr>
+            <th class="tg-9hbo">Graphic Symbol</th>
+            <th class="tg-9hbo">Name</th>
+            <th class="tg-9hbo">Hex Value</th>
+            <th class="tg-9hbo">Graphic Symbol</th>
+            <th class="tg-9hbo">Name</th>
+            <th class="tg-9hbo">Hex Value</th>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">!</td>
+            <td class="tg-yw4l">Exclamation Mark</td>
+            <td class="tg-yw4l">21</td>
+            <td class="tg-yw4l">M</td>
+            <td class="tg-yw4l">Capital Letter M</td>
+            <td class="tg-yw4l">4D</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">"</td>
+            <td class="tg-yw4l">Quotation Mark</td>
+            <td class="tg-yw4l">22</td>
+            <td class="tg-yw4l">N</td>
+            <td class="tg-yw4l">Capital Letter N</td>
+            <td class="tg-yw4l">4E</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">%</td>
+            <td class="tg-yw4l">Percent Sign</td>
+            <td class="tg-yw4l">25</td>
+            <td class="tg-yw4l">O</td>
+            <td class="tg-yw4l">Capital Letter O</td>
+            <td class="tg-yw4l">4F</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">&amp;</td>
+            <td class="tg-yw4l">Ampersand</td>
+            <td class="tg-yw4l">26</td>
+            <td class="tg-yw4l">P</td>
+            <td class="tg-yw4l">Capital Letter P</td>
+            <td class="tg-yw4l">50</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">'</td>
+            <td class="tg-yw4l">Apostrophe</td>
+            <td class="tg-yw4l">27</td>
+            <td class="tg-yw4l">Q</td>
+            <td class="tg-yw4l">Capital Letter Q</td>
+            <td class="tg-yw4l">51</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">(</td>
+            <td class="tg-yw4l">Left Parenthesis</td>
+            <td class="tg-yw4l">28</td>
+            <td class="tg-yw4l">R</td>
+            <td class="tg-yw4l">Capital Letter R</td>
+            <td class="tg-yw4l">52</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">)</td>
+            <td class="tg-yw4l">Right Parenthesis</td>
+            <td class="tg-yw4l">29</td>
+            <td class="tg-yw4l">S</td>
+            <td class="tg-yw4l">Capital Letter S</td>
+            <td class="tg-yw4l">53</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">*</td>
+            <td class="tg-yw4l">Asterisk</td>
+            <td class="tg-yw4l">2A</td>
+            <td class="tg-yw4l">T</td>
+            <td class="tg-yw4l">Capital Letter T</td>
+            <td class="tg-yw4l">54</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">+</td>
+            <td class="tg-yw4l">Plus sign</td>
+            <td class="tg-yw4l">2B</td>
+            <td class="tg-yw4l">U</td>
+            <td class="tg-yw4l">Capital Letter U</td>
+            <td class="tg-yw4l">55</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">,</td>
+            <td class="tg-yw4l">Comma</td>
+            <td class="tg-yw4l">2C</td>
+            <td class="tg-yw4l">V</td>
+            <td class="tg-yw4l">Capital Letter V</td>
+            <td class="tg-yw4l">56</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">-</td>
+            <td class="tg-yw4l">Hyphen/ Minus</td>
+            <td class="tg-yw4l">2D</td>
+            <td class="tg-yw4l">W</td>
+            <td class="tg-yw4l">Capital Letter W</td>
+            <td class="tg-yw4l">57</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">.</td>
+            <td class="tg-yw4l">Full Stop</td>
+            <td class="tg-yw4l">2E</td>
+            <td class="tg-yw4l">X</td>
+            <td class="tg-yw4l">Capital Letter X</td>
+            <td class="tg-yw4l">58</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">/</td>
+            <td class="tg-yw4l">Solidus</td>
+            <td class="tg-yw4l">2F</td>
+            <td class="tg-yw4l">Y</td>
+            <td class="tg-yw4l">Capital Letter Y</td>
+            <td class="tg-yw4l">59</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">0</td>
+            <td class="tg-yw4l">Digit Zero</td>
+            <td class="tg-yw4l">30</td>
+            <td class="tg-yw4l">Z</td>
+            <td class="tg-yw4l">Capital Letter Z</td>
+            <td class="tg-yw4l">5A</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">1</td>
+            <td class="tg-yw4l">Digit One</td>
+            <td class="tg-yw4l">31</td>
+            <td class="tg-yw4l">_</td>
+            <td class="tg-yw4l">Low Line</td>
+            <td class="tg-yw4l">5F</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">2</td>
+            <td class="tg-yw4l">Digit Two</td>
+            <td class="tg-yw4l">32</td>
+            <td class="tg-yw4l">a</td>
+            <td class="tg-yw4l">Small Letter a</td>
+            <td class="tg-yw4l">61</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">3</td>
+            <td class="tg-yw4l">Digit Three</td>
+            <td class="tg-yw4l">33</td>
+            <td class="tg-yw4l">b</td>
+            <td class="tg-yw4l">Small Letter b</td>
+            <td class="tg-yw4l">62</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">4</td>
+            <td class="tg-yw4l">Digit Four</td>
+            <td class="tg-yw4l">34</td>
+            <td class="tg-yw4l">c</td>
+            <td class="tg-yw4l">Small Letter c</td>
+            <td class="tg-yw4l">63</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">5</td>
+            <td class="tg-yw4l">Digit Five</td>
+            <td class="tg-yw4l">35</td>
+            <td class="tg-yw4l">d</td>
+            <td class="tg-yw4l">Small Letter d</td>
+            <td class="tg-yw4l">64</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">6</td>
+            <td class="tg-yw4l">Digit Six</td>
+            <td class="tg-yw4l">36</td>
+            <td class="tg-yw4l">e</td>
+            <td class="tg-yw4l">Small Letter e</td>
+            <td class="tg-yw4l">65</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">7</td>
+            <td class="tg-yw4l">Digit Seven</td>
+            <td class="tg-yw4l">37</td>
+            <td class="tg-yw4l">f</td>
+            <td class="tg-yw4l">Small Letter f</td>
+            <td class="tg-yw4l">66</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">8</td>
+            <td class="tg-yw4l">Digit Eight</td>
+            <td class="tg-yw4l">38</td>
+            <td class="tg-yw4l">g</td>
+            <td class="tg-yw4l">Small Letter g</td>
+            <td class="tg-yw4l">67</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">9</td>
+            <td class="tg-yw4l">Digit Nine</td>
+            <td class="tg-yw4l">39</td>
+            <td class="tg-yw4l">h</td>
+            <td class="tg-yw4l">Small Letter h</td>
+            <td class="tg-yw4l">68</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">:</td>
+            <td class="tg-yw4l">Colon</td>
+            <td class="tg-yw4l">3A</td>
+            <td class="tg-yw4l">i</td>
+            <td class="tg-yw4l">Small Letter i</td>
+            <td class="tg-yw4l">69</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">;</td>
+            <td class="tg-yw4l">Semicolon</td>
+            <td class="tg-yw4l">3B</td>
+            <td class="tg-yw4l">j</td>
+            <td class="tg-yw4l">Small Letter j</td>
+            <td class="tg-yw4l">6A</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">&lt;</td>
+            <td class="tg-yw4l">Less-than Sign</td>
+            <td class="tg-yw4l">3C</td>
+            <td class="tg-yw4l">k</td>
+            <td class="tg-yw4l">Small Letter k</td>
+            <td class="tg-yw4l">6B</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">=</td>
+            <td class="tg-yw4l">Equals Sign</td>
+            <td class="tg-yw4l">3D</td>
+            <td class="tg-yw4l">l</td>
+            <td class="tg-yw4l">Small Letter l</td>
+            <td class="tg-yw4l">6C</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">></td>
+            <td class="tg-yw4l">Greater-than Sign</td>
+            <td class="tg-yw4l">3E</td>
+            <td class="tg-yw4l">m</td>
+            <td class="tg-yw4l">Small Letter m</td>
+            <td class="tg-yw4l">6D</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">?</td>
+            <td class="tg-yw4l">Question Mark</td>
+            <td class="tg-yw4l">3F</td>
+            <td class="tg-yw4l">n</td>
+            <td class="tg-yw4l">Small Letter n</td>
+            <td class="tg-yw4l">6E</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">A</td>
+            <td class="tg-yw4l">Capital Letter A</td>
+            <td class="tg-yw4l">41</td>
+            <td class="tg-yw4l">o</td>
+            <td class="tg-yw4l">Small Letter o</td>
+            <td class="tg-yw4l">6F</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">B</td>
+            <td class="tg-yw4l">Capital Letter B</td>
+            <td class="tg-yw4l">42</td>
+            <td class="tg-yw4l">p</td>
+            <td class="tg-yw4l">Small Letter p</td>
+            <td class="tg-yw4l">70</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">C</td>
+            <td class="tg-yw4l">Capital Letter C</td>
+            <td class="tg-yw4l">43</td>
+            <td class="tg-yw4l">q</td>
+            <td class="tg-yw4l">Small Letter q</td>
+            <td class="tg-yw4l">71</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">D</td>
+            <td class="tg-yw4l">Capital Letter D</td>
+            <td class="tg-yw4l">44</td>
+            <td class="tg-yw4l">r</td>
+            <td class="tg-yw4l">Small Letter r</td>
+            <td class="tg-yw4l">72</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">E</td>
+            <td class="tg-yw4l">Capital Letter E</td>
+            <td class="tg-yw4l">45</td>
+            <td class="tg-yw4l">s</td>
+            <td class="tg-yw4l">Small Letter s</td>
+            <td class="tg-yw4l">73</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">F</td>
+            <td class="tg-yw4l">Capital Letter F</td>
+            <td class="tg-yw4l">46</td>
+            <td class="tg-yw4l">t</td>
+            <td class="tg-yw4l">Small Letter t</td>
+            <td class="tg-yw4l">74</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">G</td>
+            <td class="tg-yw4l">Capital Letter G</td>
+            <td class="tg-yw4l">47</td>
+            <td class="tg-yw4l">u</td>
+            <td class="tg-yw4l">Small Letter u</td>
+            <td class="tg-yw4l">75</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">H</td>
+            <td class="tg-yw4l">Capital Letter H</td>
+            <td class="tg-yw4l">48</td>
+            <td class="tg-yw4l">v</td>
+            <td class="tg-yw4l">Small Letter v</td>
+            <td class="tg-yw4l">76</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">I</td>
+            <td class="tg-yw4l">Capital Letter I</td>
+            <td class="tg-yw4l">49</td>
+            <td class="tg-yw4l">w</td>
+            <td class="tg-yw4l">Small Letter w</td>
+            <td class="tg-yw4l">77</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">J</td>
+            <td class="tg-yw4l">Capital Letter J</td>
+            <td class="tg-yw4l">4A</td>
+            <td class="tg-yw4l">x</td>
+            <td class="tg-yw4l">Small Letter x</td>
+            <td class="tg-yw4l">78</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">K</td>
+            <td class="tg-yw4l">Capital Letter K</td>
+            <td class="tg-yw4l">4B</td>
+            <td class="tg-yw4l">y</td>
+            <td class="tg-yw4l">Small Letter y</td>
+            <td class="tg-yw4l">79</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l">L</td>
+            <td class="tg-yw4l">Capital Letter L</td>
+            <td class="tg-yw4l">4C</td>
+            <td class="tg-yw4l">z</td>
+            <td class="tg-yw4l">Small Letter z</td>
+            <td class="tg-yw4l">7A</td>
+          </tr>
+          <tr>
+            <td class="tg-yw4l"/>
+            <td class="tg-yw4l">Space</td>
+            <td class="tg-yw4l">20</td>
+            <td class="tg-yw4l"/>
+            <td class="tg-yw4l"/>
+            <td class="tg-yw4l"/>
+          </tr>
+        </table>
+      </xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="lei:Tokenized500Type">
+      <xs:pattern
+        value="(!|&quot;|%|&amp;|'|\(|\)|\*|\+|,|-|\.|/|0|1|2|3|4|5|6|7|8|9|:|;|&lt;|=|>|\?|A|B|C|D|E|F|G|H|I|J|K|L| |M|N|O|P|Q|R|S|T|U|V|W|X|Y|Z|_|a|b|c|d|e|f|g|h|i|j|k|l|m|n|o|p|q|r|s|t|u|v|w|x|y|z)+"
+      />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="TransliteratedOtherEntityNameType">
+    <xs:complexContent>
+      <xs:extension base="lei:TransliteratedNameType">
+        <xs:attribute name="type" type="lei:TransliteratedEntityNameTypeEnum" use="required">
+          <xs:annotation>
+            <xs:documentation>Type of alternative name for the legal entity.</xs:documentation>
+
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:simpleType name="TransliteratedEntityNameTypeEnum">
+    <xs:restriction base="xs:token">
+      <xs:enumeration value="PREFERRED_ASCII_TRANSLITERATED_LEGAL_NAME">
+        <xs:annotation>
+          <xs:documentation>Legal name of the entity transliterated to ASCII characters, provided by
+            the entity for this purpose.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+      <xs:enumeration value="AUTO_ASCII_TRANSLITERATED_LEGAL_NAME">
+        <xs:annotation>
+          <xs:documentation>Legal name of the entity transliterated to ASCII characters,
+            auto-transliterated by the managing LOU.</xs:documentation>
+
+        </xs:annotation>
+      </xs:enumeration>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="TransliteratedNameType">
+    <xs:simpleContent>
+      <xs:extension base="lei:TransliteratedStringType">
+        <xs:attribute ref="xml:lang" use="optional">
+          <xs:annotation>
+            <xs:documentation>The language of this element's text content. An IETF Language Code
+              conforming to the latest RFC from IETF BCP 47. Note that the first characters of an
+              IETF Language Code, up to the hyphen (if any), are all lowercase, and those following
+              the hyphen (if any) are all uppercase.<br/>
+            </xs:documentation>
+          </xs:annotation>
+        </xs:attribute>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  <xs:simpleType name="LEIDateTimeProfile">
+    <xs:restriction base="xs:dateTime">
+      <xs:annotation>
+        <xs:documentation>
+          <ul>
+            <li>Elements of base data type <code>xs:dateTime</code> further restrict the ISO 8601
+              range of date and time format to the single format:
+                <br/><br/><strong>YYYY-MM-DDThh:mm:ss.sssTZ</strong><br/>
+              <br/> where the components of the above string are as follows: <ul>
+                <li>YYYY is the year</li>
+                <li>MM is the month (01 = January, â€¦, 12 = December)</li>
+                <li>DD is the day of the month (01 = first day of the month)</li>
+                <li>T is the single character â€˜Tâ€™</li>
+                <li>hh is the hour (00 â€“ 23)</li>
+                <li>mm is the minute</li>
+                <li>ss.sss is the second and milliseconds. Two digits must be used for the seconds.
+                  From one to three digits may be used for milliseconds, or omitted entirely along
+                  with the decimal point.</li>
+                <li>TZ is the time zone specifier, which can be one of:</li>
+                <ul>
+                  <li>Z the single character â€˜Zâ€™, denoting Coordinated Universal Time (UTC); or</li>
+                  <li>+hh:mm denoting a positive offset from UTC; or</li>
+                  <li>-hh:mm denoting a negative offset from UTC</li>
+                </ul>
+              </ul> This pattern therefore adds the restrictions, beyond the ISO 8601 specification: <ul>
+                <li>Only the specified pattern of digits, indicators and separators may be used (no
+                  spaces or other white space characters).</li>
+                <li>The time zone (TZ) MUST be present, although it <strong>may</strong> be zero (Z)
+                    <strong>if</strong> all dates and times are expressed as UTC+00:00.</li>
+                <li>Only 3 decimal places maximum are allowed in the seconds section (ss.sss).</li>
+              </ul>
+            </li>
+          </ul>
+        </xs:documentation>
+      </xs:annotation>
+      <xs:pattern
+        value="([^\.]*|([^\.]*(\.((\d){1,3})){0,1}))(Z|\+([01][0-9]|2[0-3]):([0-5][0-9])|-([01][0-9]|2[0-3]):([0-5][0-9]))"
+      />
+    </xs:restriction>
+  </xs:simpleType>
+  <!-- 
+  <xs:simpleType name="CountType">
+    <xs:annotation>
+      <xs:documentation>A count must be a whole number, equal to zero or more.</xs:documentation>
+    </xs:annotation>
+      <xs:restriction base="xs:int">
+        <xs:minInclusive value="0"/>
+      </xs:restriction>    
+  </xs:simpleType>
+  -->
+</xs:schema>

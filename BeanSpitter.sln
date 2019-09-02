@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.489
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeanSpitter", "BeanSpitter\BeanSpitter.csproj", "{B6142C21-DE9C-4085-AE87-85FD827EF515}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BeanSpitter.Tests", "BeanSpitter.Tests\BeanSpitter.Tests.csproj", "{B740DE37-1A62-4E8D-A3F1-AD7A036F13B6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B6142C21-DE9C-4085-AE87-85FD827EF515}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6142C21-DE9C-4085-AE87-85FD827EF515}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6142C21-DE9C-4085-AE87-85FD827EF515}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6142C21-DE9C-4085-AE87-85FD827EF515}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B740DE37-1A62-4E8D-A3F1-AD7A036F13B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B740DE37-1A62-4E8D-A3F1-AD7A036F13B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B740DE37-1A62-4E8D-A3F1-AD7A036F13B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B740DE37-1A62-4E8D-A3F1-AD7A036F13B6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {96614B6A-9716-40F6-A403-40EC88122819}
+	EndGlobalSection
+EndGlobal
