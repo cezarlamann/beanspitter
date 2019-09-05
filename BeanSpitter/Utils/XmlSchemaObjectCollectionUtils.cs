@@ -28,7 +28,13 @@ namespace BeanSpitter.Utils
                 .ToArray();
             var types = schemaObjects
                 .Where(w => w.GetType() == typeof(XmlSchemaComplexType))
-                .ToArray();
+                .ToList();
+
+            var elementsWithComplexType = schemaObjects.Where(w => w.GetType() == typeof(XmlSchemaElement) &&
+                        ((XmlSchemaElement)w).SchemaType != null &&
+                        ((XmlSchemaElement)w).SchemaType.GetType() == typeof(XmlSchemaComplexType));
+
+            types.AddRange(elementsWithComplexType.Select(s => (XmlSchemaComplexType)((XmlSchemaElement)s).SchemaType));
 
             foreach (var item in xmlElements)
             {
