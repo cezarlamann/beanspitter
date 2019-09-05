@@ -1,6 +1,7 @@
 ﻿namespace BeanSpitter.Tests.XmlParserTests
 {
     using BeanSpitter.Interfaces;
+    using BeanSpitter.Tests.XmlSchemaReaderTests.ClassesFromXsds;
     using BeanSpitter.Tests.XmlSchemaReaderTests.ClassesFromXsds.Gleif;
     using BeanSpitter.Tests.XmlSchemaReaderTests.ClassesFromXsds.Mifid.DraftSchemas.International.Reporting;
     using BeanSpitter.Tests.XmlSchemaReaderTests.ClassesFromXsds.Mifid.Headers;
@@ -46,6 +47,9 @@
         private XmlSchemaSet gleifSchemaSet;
         private string[] gleifFiles;
 
+        private XmlSchemaSet customerSchemaSet;
+        private string[] customerFiles;
+
         private IFileSystem fs;
 
         private IMemoryStreamFactory msf;
@@ -75,6 +79,7 @@
             draftNationalReportingSchemaSet = new XmlSchemaSet { XmlResolver = new XmlUrlResolver() };
             finalNationalReportingSchemaSet = new XmlSchemaSet { XmlResolver = new XmlUrlResolver() };
             gleifSchemaSet = new XmlSchemaSet { XmlResolver = new XmlUrlResolver() };
+            customerSchemaSet = new XmlSchemaSet { XmlResolver = new XmlUrlResolver() };
 
             executingPath = fs.Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
@@ -95,6 +100,17 @@
                 .Where(w =>
                     w.Contains("2017-03-21_lei-cdf-v2-1"))
                 .ToArray();
+
+            customerFiles = xmlSchemaFiles
+                .Where(w =>
+                    w.Contains("CustomersOrders"))
+                .ToArray();
+
+            foreach (var item in customerFiles)
+            {
+                var schema = reader.ReadFromPath(item);
+                customerSchemaSet.Add(schema);
+            }
 
             foreach (var item in gleifFiles)
             {
@@ -330,6 +346,38 @@
             Assert.IsNotNull(res);
             Assert.IsTrue(res.ParsedNodeCount > 0);
             Assert.IsTrue(res.Errors.Count(c => c.Exception.GetType() == typeof(OperationCanceledException)) > 0);
+        }
+
+        [TestMethod]
+        public void XmlParsingTestWithCustomerOrderFile()
+        {
+            var xmlpath = fs.Path.Combine(xmlFilesPath, "CustomersOrders.xml");
+
+            var parser = new XmlParser(msf, fs, null, null, null);
+
+            var cb = new ConcurrentBag<string>();
+
+            parser.NodeRead += async (s, e, c) =>
+            {
+                await Task.Run(() =>
+                {
+                    var node = (OrderType)e.Node;
+                    var str = $"CustomerID (TxId): {node.CustomerID}";
+                    Debug.WriteLine(str);
+                    cb.Add(str);
+                });
+            };
+
+            var res = parser.ParseXmlFileFromFileAsync(
+                xmlpath,
+                customerSchemaSet,
+                true, typeof(OrderType)).Result;
+
+            parser.Dispose();
+
+            Assert.IsNotNull(res);
+            Assert.IsTrue(res.ErrorCount == 0);
+            Assert.IsTrue(cb.Count == res.ParsedNodeCount);
         }
     }
 }
