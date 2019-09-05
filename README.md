@@ -1,5 +1,5 @@
 # BeanSpitter
-## A Simple, Stream-Oriented XML Parser for .NET
+## A Simple, Stream-Oriented XML Parser for .NET - NuGet: [here](https://www.nuget.org/packages/BeanSpitter)
 
 ### This XML Parsing Library aims to simplify parsing operations for files which:
 - Have an associated XML Schema Definition (XSD);
