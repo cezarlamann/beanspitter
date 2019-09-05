@@ -14,6 +14,9 @@
 - Parsing by type, with header type support (like those XML Files that have Envelope, Header and Payload schemas, e.g. ISO 20022 XML Messages - this library was initially made for these);
 - Async Event-raising for nodes read, errors occurred and when it finishes parsing and validating. Kind of SAX inspired, but it raises POCO-like objects;
 
+### Usage and Documentation:
+- Still a work in progress, but you can find code samples in the [SAMPLES folder](https://github.com/cezarlamann/beanspitter/tree/master/SAMPLES) and a very basic usage example can be found [here](https://github.com/cezarlamann/beanspitter/blob/master/SAMPLES/SampleXmlParsingConsoleApp/SampleXmlParsingConsoleApp/Program.cs)
+
 #### Caveats:
 - When using .NET Core, you must add a `new XmlUrlResolver()` to your `XmlSchemaSet.XmlResolver` property (reference [here](https://stackoverflow.com/a/54764593/1475630)) or do [this](https://github.com/dotnet/corefx/wiki/ApiCompat#systemxmlschema).
 
