@@ -1,4 +1,4 @@
-# Beanspitter
+# BeanSpitter
 ## A Simple, Stream-Oriented XML Parser for .NET
 
 ### This XML Parsing Library aims to simplify parsing operations for files which:
